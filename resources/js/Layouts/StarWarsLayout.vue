@@ -20,7 +20,7 @@ const maxWidthClass = props.maxWidth === '4xl' ? 'max-w-4xl' : 'max-w-7xl';
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-100 flex flex-col">
         <!-- Navigation -->
         <nav class="border-b border-gray-100 bg-white shadow-sm">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -76,7 +76,7 @@ const maxWidthClass = props.maxWidth === '4xl' ? 'max-w-4xl' : 'max-w-7xl';
         </nav>
 
         <!-- Content -->
-        <div class="py-12">
+        <div class="flex-1 py-12">
             <div class="mx-auto px-4 sm:px-6 lg:px-8" :class="maxWidthClass">
                 <!-- Loading State -->
                 <LoadingSpinner v-if="loading" />
@@ -110,7 +110,7 @@ const maxWidthClass = props.maxWidth === '4xl' ? 'max-w-4xl' : 'max-w-7xl';
         </div>
 
         <!-- Footer -->
-        <footer class="mt-16 border-t border-gray-200 bg-white">
+        <footer class="border-t border-gray-200 bg-white">
             <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                 <div class="text-center text-sm text-gray-500">
                     <p>Built with Laravel, Vue.js, and the Star Wars API (SWAPI)</p>
