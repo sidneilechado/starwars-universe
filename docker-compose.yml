@@ -5,8 +5,13 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/var/www/html
+      - ./app:/var/www/html/app
+      - ./config:/var/www/html/config
+      - ./database:/var/www/html/database
+      - ./resources:/var/www/html/resources
+      - ./routes:/var/www/html/routes
       - ./storage:/var/www/html/storage
+      - ./bootstrap:/var/www/html/bootstrap
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
@@ -67,7 +72,13 @@ services:
     build: .
     container_name: starwars-queue-worker
     volumes:
-      - .:/var/www/html
+      - ./app:/var/www/html/app
+      - ./config:/var/www/html/config
+      - ./database:/var/www/html/database
+      - ./resources:/var/www/html/resources
+      - ./routes:/var/www/html/routes
+      - ./storage:/var/www/html/storage
+      - ./bootstrap:/var/www/html/bootstrap
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
@@ -99,7 +110,13 @@ services:
     build: .
     container_name: starwars-scheduler
     volumes:
-      - .:/var/www/html
+      - ./app:/var/www/html/app
+      - ./config:/var/www/html/config
+      - ./database:/var/www/html/database
+      - ./resources:/var/www/html/resources
+      - ./routes:/var/www/html/routes
+      - ./storage:/var/www/html/storage
+      - ./bootstrap:/var/www/html/bootstrap
     environment:
       - APP_ENV=local
       - APP_DEBUG=true

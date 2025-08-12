@@ -5,6 +5,18 @@ set -e
 # Set working directory
 cd /var/www/html
 
+# Ensure .env file exists and has the correct key
+if [ ! -f .env ]; then
+    echo "Copying environment configuration..."
+    cp .env.docker .env
+fi
+
+# Generate app key if missing
+if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env || grep -q "APP_KEY=\"\"" .env; then
+    echo "Generating application key..."
+    php artisan key:generate --force
+fi
+
 # Wait for MySQL to be ready
 echo "Waiting for MySQL to be ready..."
 until php -r "

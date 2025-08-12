@@ -27,26 +27,22 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy composer files and install dependencies
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-scripts
-
 # Copy application code
 COPY . .
 
-# Install Node.js dependencies (need all dependencies for build)
-RUN npm ci
-
-# Set permissions
+# Set permissions for Laravel directories
 RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Install dependencies (including dev for development environment)
+RUN composer install --optimize-autoloader
+
+# Install Node.js dependencies (need all dependencies for build)
+RUN npm ci
+
 # Build frontend assets
 RUN npm run build
-
-# Remove dev dependencies after build
-RUN npm prune --production
 
 # Configure Nginx
 COPY docker/nginx.conf /etc/nginx/nginx.conf
