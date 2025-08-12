@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build: .
@@ -53,7 +51,8 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
-    command: php artisan queue:work --verbose --tries=3 --timeout=90
+      - app
+    command: ["php", "artisan", "queue:work", "--verbose", "--tries=3", "--timeout=90"]
     networks:
       - starwars-network
     restart: unless-stopped
@@ -78,7 +77,8 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
-    command: php artisan schedule:work
+      - app
+    command: ["php", "artisan", "schedule:work"]
     networks:
       - starwars-network
     restart: unless-stopped

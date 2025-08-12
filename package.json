@@ -1,4 +1,5 @@
 {
+    "name": "starwars-universe",
     "private": true,
     "type": "module",
     "scripts": {

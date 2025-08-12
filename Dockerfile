@@ -58,6 +58,10 @@ COPY docker/default.conf /etc/nginx/conf.d/default.conf
 RUN mkdir -p /var/log/supervisor
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# Copy and set permissions for entrypoint script
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # Create database directory and file
 RUN mkdir -p /var/www/html/database
 RUN touch /var/www/html/database/database.sqlite
@@ -74,5 +78,8 @@ RUN php artisan migrate --force
 # Expose port
 EXPOSE 8000
 
-# Start supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+# Default command for main app container
+CMD ["app"]
