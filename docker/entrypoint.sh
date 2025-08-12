@@ -5,12 +5,21 @@ set -e
 # Set working directory
 cd /var/www/html
 
-# Wait for database file to be ready (for SQLite)
-echo "Waiting for database to be ready..."
-while [ ! -f "/var/www/html/database/database.sqlite" ]; do
-    echo "Database file not found, waiting..."
+# Wait for MySQL to be ready
+echo "Waiting for MySQL to be ready..."
+until php -r "
+try {
+    \$pdo = new PDO('mysql:host=mysql;port=3306', 'starwars', 'starwars123');
+    exit(0);
+} catch (Exception \$e) {
+    exit(1);
+}
+" 2>/dev/null; do
+    echo "MySQL is unavailable - sleeping"
     sleep 2
 done
+
+echo "MySQL is ready!"
 
 # Wait for redis to be ready
 echo "Waiting for Redis to be ready..."
@@ -31,9 +40,8 @@ done
 echo "Redis is ready!"
 
 # Ensure proper permissions
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
-chmod 664 /var/www/html/database/database.sqlite
 
 # Handle different container types
 if [ "$1" = "app" ]; then

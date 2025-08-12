@@ -10,13 +10,40 @@ services:
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
-      - DB_CONNECTION=sqlite
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=starwars
+      - DB_USERNAME=starwars
+      - DB_PASSWORD=starwars123
       - QUEUE_CONNECTION=redis
       - CACHE_STORE=redis
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
+      - mysql
       - redis
+    networks:
+      - starwars-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mysql:
+    image: mysql:8.0
+    container_name: starwars-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: starwars
+      MYSQL_USER: starwars
+      MYSQL_PASSWORD: starwars123
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
     networks:
       - starwars-network
     logging:
@@ -44,12 +71,18 @@ services:
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
-      - DB_CONNECTION=sqlite
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=starwars
+      - DB_USERNAME=starwars
+      - DB_PASSWORD=starwars123
       - QUEUE_CONNECTION=redis
       - CACHE_STORE=redis
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
+      - mysql
       - redis
       - app
     command: ["php", "artisan", "queue:work", "--verbose", "--tries=3", "--timeout=90"]
@@ -70,12 +103,18 @@ services:
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
-      - DB_CONNECTION=sqlite
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=starwars
+      - DB_USERNAME=starwars
+      - DB_PASSWORD=starwars123
       - QUEUE_CONNECTION=redis
       - CACHE_STORE=redis
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
+      - mysql
       - redis
       - app
     command: ["php", "artisan", "schedule:work"]
@@ -89,6 +128,7 @@ services:
         max-file: "3"
 
 volumes:
+  mysql_data:
   redis_data:
 
 networks:

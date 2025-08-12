@@ -9,7 +9,6 @@ RUN apk add --no-cache \
     unzip \
     nodejs \
     npm \
-    sqlite \
     nginx \
     supervisor
 
@@ -62,18 +61,11 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Create database directory and file
-RUN mkdir -p /var/www/html/database
-RUN touch /var/www/html/database/database.sqlite
-RUN chown www-data:www-data /var/www/html/database/database.sqlite
-RUN chmod 664 /var/www/html/database/database.sqlite
-
 # Copy environment file for Docker
 RUN cp .env.docker .env
 
-# Generate application key and run migrations
+# Generate application key
 RUN php artisan key:generate --force
-RUN php artisan migrate --force
 
 # Expose port
 EXPOSE 8000
