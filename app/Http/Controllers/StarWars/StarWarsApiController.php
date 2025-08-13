@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class StarWarsApiController extends Controller
 {
     public function __construct(
-        private StarWarsService $starWarsService
+        private readonly StarWarsService $starWarsService
     ) {}
 
     /**

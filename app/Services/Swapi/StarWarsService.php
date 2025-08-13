@@ -4,12 +4,13 @@ namespace App\Services\Swapi;
 
 use App\Services\Swapi\FilmService;
 use App\Services\Swapi\PersonService;
+use InvalidArgumentException;
 
 class StarWarsService
 {
     public function __construct(
-        private FilmService $filmService,
-        private PersonService $personService
+        private readonly FilmService $filmService,
+        private readonly PersonService $personService
     ) {}
 
     /**
@@ -46,13 +47,15 @@ class StarWarsService
 
     /**
      * Generic search method that delegates based on type
+     * 
+     * @throws InvalidArgumentException
      */
     public function search(string $query, string $type): array
     {
         return match ($type) {
             'films' => $this->searchFilms($query),
             'people' => $this->searchPeople($query),
-            default => throw new \InvalidArgumentException("Invalid search type: {$type}")
+            default => throw new InvalidArgumentException("Invalid search type: {$type}")
         };
     }
 }

@@ -10,13 +10,13 @@ use Inertia\Inertia;
 class StarWarsWebController extends Controller
 {
     public function __construct(
-        private StarWarsService $starWarsService
+        private readonly StarWarsService $starWarsService
     ) {}
 
     /**
      * Show the main search page
      */
-    public function index()
+    public function index(): \Inertia\Response
     {
         return Inertia::render('StarWars/Search');
     }
@@ -24,7 +24,7 @@ class StarWarsWebController extends Controller
     /**
      * Show film details page
      */
-    public function showFilm(int $id)
+    public function showFilm(int $id): \Inertia\Response
     {
         $result = $this->starWarsService->getFilmById($id);
 
@@ -41,7 +41,7 @@ class StarWarsWebController extends Controller
     /**
      * Show person details page
      */
-    public function showPerson(int $id)
+    public function showPerson(int $id): \Inertia\Response
     {
         $result = $this->starWarsService->getPersonById($id);
 
@@ -58,7 +58,7 @@ class StarWarsWebController extends Controller
     /**
      * Show statistics page
      */
-    public function showStatistics()
+    public function showStatistics(): \Inertia\Response
     {
         $statistics = Cache::get('search_statistics');
         $error = null;

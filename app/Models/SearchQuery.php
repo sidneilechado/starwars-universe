@@ -2,8 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Search Query Model
+ *
+ * Stores search queries made through the Star Wars Universe application,
+ * including query details, performance metrics, and user information.
+ *
+ * @property int $id
+ * @property string $query The search query string
+ * @property string $type The type of search (people, planets, starships, etc.)
+ * @property int $results_count Number of results returned
+ * @property int $response_time_ms Response time in milliseconds
+ * @property string|null $ip_address IP address of the user
+ * @property string|null $user_agent User agent string
+ * @property string|null $session_id Session identifier
+ * @property string|null $country_code Country code of the user
+ * @property string|null $device_type Type of device used
+ * @property string|null $browser Browser used
+ * @property bool $has_results Whether the search returned results
+ * @property string|null $referrer Referrer URL
+ * @property array|null $query_metadata Additional metadata about the query
+ * @property \Illuminate\Support\Carbon $searched_at When the search was performed
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ */
 class SearchQuery extends Model
 {
     protected $fillable = [
@@ -29,38 +54,15 @@ class SearchQuery extends Model
         'query_metadata' => 'array',
     ];
 
-    public function scopeRecent($query, $hours = 24)
+    /**
+     * Scope to filter searches within a specified number of hours
+     *
+     * @param Builder $query
+     * @param int $hours Number of hours to look back (default: 24)
+     * @return Builder
+     */
+    public function scopeRecent(Builder $query, int $hours = 24): Builder
     {
         return $query->where('searched_at', '>=', now()->subHours($hours));
-    }
-
-    public function scopeByType($query, $type)
-    {
-        return $query->where('type', $type);
-    }
-
-    public function scopeWithResults($query)
-    {
-        return $query->where('has_results', true);
-    }
-
-    public function scopeWithoutResults($query)
-    {
-        return $query->where('has_results', false);
-    }
-
-    public function scopeByCountry($query, $countryCode)
-    {
-        return $query->where('country_code', $countryCode);
-    }
-
-    public function scopeByDevice($query, $deviceType)
-    {
-        return $query->where('device_type', $deviceType);
-    }
-
-    public function scopeBySession($query, $sessionId)
-    {
-        return $query->where('session_id', $sessionId);
     }
 }

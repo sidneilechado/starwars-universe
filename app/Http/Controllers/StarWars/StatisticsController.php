@@ -15,7 +15,7 @@ class StatisticsController extends Controller
     {
         $statistics = Cache::get('search_statistics');
 
-        if (!$statistics) {
+        if (! $statistics) {
             return response()->json([
                 'success' => false,
                 'error' => 'Statistics not available',
